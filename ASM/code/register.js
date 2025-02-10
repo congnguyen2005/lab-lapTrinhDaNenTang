@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-// Định nghĩa styles
 const styles = StyleSheet.create({
   container: { flex: 1, padding: 20, justifyContent: "center", backgroundColor: "#fff" },
   header: { fontSize: 24, fontWeight: "bold", textAlign: "center", marginBottom: 20 },
@@ -13,19 +12,18 @@ const styles = StyleSheet.create({
 });
 
 const RegisterScreen = ({ navigation }) => {
+  const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
-  // Hàm kiểm tra email hợp lệ
   const isValidEmail = (email) => /\S+@\S+\.\S+/.test(email);
+  const isValidPhone = (phone) => /^[0-9]{10}$/.test(phone);
+  const isValidPassword = (password) => password.length >= 6 && /[a-zA-Z]/.test(password) && /\d/.test(password);
 
-  // Hàm kiểm tra mật khẩu mạnh (ít nhất 6 ký tự)
-  const isValidPassword = (password) => password.length >= 6;
-
-  // Xử lý đăng ký
   const handleRegister = async () => {
-    if (!email || !password || !confirmPassword) {
+    if (!fullName || !email || !phone || !password || !confirmPassword) {
       Alert.alert("Lỗi", "Vui lòng nhập đầy đủ thông tin!");
       return;
     }
@@ -35,8 +33,13 @@ const RegisterScreen = ({ navigation }) => {
       return;
     }
 
+    if (!isValidPhone(phone)) {
+      Alert.alert("Lỗi", "Số điện thoại phải có 10 chữ số!");
+      return;
+    }
+
     if (!isValidPassword(password)) {
-      Alert.alert("Lỗi", "Mật khẩu phải có ít nhất 6 ký tự!");
+      Alert.alert("Lỗi", "Mật khẩu phải có ít nhất 6 ký tự, bao gồm chữ cái và số!");
       return;
     }
 
@@ -45,11 +48,10 @@ const RegisterScreen = ({ navigation }) => {
       return;
     }
 
-    // Lưu tài khoản vào AsyncStorage
     try {
-      await AsyncStorage.setItem("user", JSON.stringify({ email, password }));
+      await AsyncStorage.setItem("user", JSON.stringify({ fullName, email, phone, password }));
       Alert.alert("Thành công", "Đăng ký thành công!", [
-        { text: "OK", onPress: () => navigation.navigate("Login") },
+        { text: "OK", onPress: () => navigation.replace("Login") },
       ]);
     } catch (error) {
       Alert.alert("Lỗi", "Không thể lưu tài khoản, vui lòng thử lại!");
@@ -59,28 +61,11 @@ const RegisterScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.header}>Đăng Ký</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Email"
-        keyboardType="email-address"
-        autoCapitalize="none"
-        value={email}
-        onChangeText={setEmail}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Mật khẩu"
-        secureTextEntry
-        value={password}
-        onChangeText={setPassword}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Xác nhận mật khẩu"
-        secureTextEntry
-        value={confirmPassword}
-        onChangeText={setConfirmPassword}
-      />
+      <TextInput style={styles.input} placeholder="Họ và tên" value={fullName} onChangeText={setFullName} />
+      <TextInput style={styles.input} placeholder="Email" keyboardType="email-address" autoCapitalize="none" value={email} onChangeText={setEmail} />
+      <TextInput style={styles.input} placeholder="Số điện thoại" keyboardType="phone-pad" value={phone} onChangeText={setPhone} />
+      <TextInput style={styles.input} placeholder="Mật khẩu" secureTextEntry value={password} onChangeText={setPassword} />
+      <TextInput style={styles.input} placeholder="Xác nhận mật khẩu" secureTextEntry value={confirmPassword} onChangeText={setConfirmPassword} />
       <TouchableOpacity style={styles.button} onPress={handleRegister}>
         <Text style={styles.buttonText}>Đăng Ký</Text>
       </TouchableOpacity>
