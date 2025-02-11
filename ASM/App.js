@@ -2,26 +2,22 @@ import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import { Ionicons } from "react-native-vector-icons";
+import Ionicons from "react-native-vector-icons/Ionicons";
 import HomeScreen from "./code/home";
 import ProductDetailsScreen from "./code/screens/ProductDetailsScreen";
 import LoginScreen from "./code/login";
 import RegisterScreen from "./code/register";
 import ProfileScreen from "./code/screens/profileScreen"; 
-import CartScreen from "./code/screens/CartScreen";
 import ForgotPasswordScreen from "./code/screens/ForgotPasswordScreen";
-
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
 // Stack điều hướng Home + Chi tiết sản phẩm
 const HomeStack = () => (
-  <Stack.Navigator>
+  <Stack.Navigator initialRouteName="Home">
     <Stack.Screen name="Home" component={HomeScreen} options={{ headerShown: false }} />
-    <Stack.Screen name="ProductDetails" component={ProductDetailsScreen} />
-    <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
-
+    <Stack.Screen name="ProductDetails" component={ProductDetailsScreen} options={{ title: "Chi Tiết Sản Phẩm" }} />
   </Stack.Navigator>
 );
 
@@ -42,7 +38,6 @@ const MainTabs = () => (
   >
     <Tab.Screen name="Home" component={HomeStack} />
     <Tab.Screen name="Profile" component={ProfileScreen} />
-
   </Tab.Navigator>
 );
 
@@ -52,6 +47,7 @@ const App = () => (
     <Stack.Navigator initialRouteName="Login" screenOptions={{ headerShown: false }}>
       <Stack.Screen name="Login" component={LoginScreen} />
       <Stack.Screen name="Register" component={RegisterScreen} />
+      <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
       <Stack.Screen name="Home" component={MainTabs} />
     </Stack.Navigator>
   </NavigationContainer>

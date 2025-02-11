@@ -25,7 +25,10 @@ const HomeScreen = ({ navigation }) => {
   }
 
   const renderItem = ({ item }) => (
-    <TouchableOpacity style={styles.productCard} onPress={() => navigation.navigate("ProductDetail", { product: item })}>
+    <TouchableOpacity 
+      style={styles.productCard} 
+      onPress={() => navigation.navigate("ProductDetails", { product: item })} // Đúng tên màn hình
+    >
       <Image source={{ uri: item.image }} style={styles.image} />
       <Text style={styles.name}>{item.title}</Text>
       <Text style={styles.price}>${item.price}</Text>
@@ -66,6 +69,7 @@ const styles = StyleSheet.create({
     marginTop: 5,
     fontWeight: "bold",
     fontSize: 16,
+    textAlign: "center",
   },
   price: {
     color: "green",
@@ -80,3 +84,4 @@ const styles = StyleSheet.create({
 });
 
 export default HomeScreen;
+  
