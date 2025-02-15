@@ -3,10 +3,10 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { Ionicons, FontAwesome } from "@expo/vector-icons";
-import HomeScreen from "./screens/HomeScreen";
-import ProfileScreen from "./screens/ProfileScreen";
-import CartScreen from "./screens/CartScreen";
-import ProductDetailScreen from "./screens/ProductDetailScreen";
+import HomeScreen from "../login";
+import ProfileScreen from "./ProfileScreen";
+import CartScreen from "./CartScreen";
+import ProductDetailScreen from "./ProductDetailsScreen";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();

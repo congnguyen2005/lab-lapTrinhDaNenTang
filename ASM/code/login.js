@@ -6,8 +6,9 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false); // Trạng thái hiển thị mật khẩu
+  const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
     loadSavedCredentials();
@@ -24,15 +25,36 @@ const LoginScreen = ({ navigation }) => {
   };
 
   const handleLogin = async () => {
-    if (rememberMe) {
-      await AsyncStorage.setItem("savedEmail", email);
-      await AsyncStorage.setItem("savedPassword", password);
-    } else {
-      await AsyncStorage.removeItem("savedEmail");
-      await AsyncStorage.removeItem("savedPassword");
+    try {
+      const storedUser = await AsyncStorage.getItem("user");
+      if (!storedUser) {
+        setErrorMessage("Tài khoản chưa được đăng ký!");
+        return;
+      }
+
+      const { email: savedEmail, password: savedPassword } = JSON.parse(storedUser);
+
+      if (email !== savedEmail || password !== savedPassword) {
+        setErrorMessage("Email hoặc mật khẩu không đúng. Vui lòng thử lại.");
+        return;
+      }
+
+      if (rememberMe) {
+        await AsyncStorage.setItem("savedEmail", email);
+        await AsyncStorage.setItem("savedPassword", password);
+      } else {
+        await AsyncStorage.removeItem("savedEmail");
+        await AsyncStorage.removeItem("savedPassword");
+      }
+
+      setErrorMessage("");
+      navigation.replace("Home");
+    } catch (error) {
+      console.error("Lỗi khi đăng nhập", error);
+      setErrorMessage("Đã xảy ra lỗi. Vui lòng thử lại.");
     }
-    navigation.replace("Home");
   };
+
 
   return (
     <View style={styles.container}>
@@ -43,8 +65,7 @@ const LoginScreen = ({ navigation }) => {
         value={email}
         onChangeText={setEmail}
       />
-      
-      {/* Ô nhập mật khẩu */}
+
       <View style={styles.passwordContainer}>
         <TextInput
           style={styles.passwordInput}
@@ -58,6 +79,8 @@ const LoginScreen = ({ navigation }) => {
         </TouchableOpacity>
       </View>
 
+      {errorMessage ? <Text style={styles.errorText}>{errorMessage}</Text> : null}
+
       <View style={styles.rememberContainer}>
         <TouchableOpacity onPress={() => setRememberMe(!rememberMe)}>
           <Text style={styles.rememberText}>{rememberMe ? "✅ " : "⬜ "}Lưu mật khẩu</Text>
@@ -69,8 +92,6 @@ const LoginScreen = ({ navigation }) => {
       </TouchableOpacity>
 
       <Text style={styles.orText}>Hoặc đăng nhập bằng</Text>
-
-      {/* Nút đăng nhập Google và Facebook */}
       <View style={styles.socialContainer}>
         <TouchableOpacity style={[styles.socialButton, { backgroundColor: "#DB4437" }]}>
           <Ionicons name="logo-google" size={24} color="white" />
@@ -86,9 +107,8 @@ const LoginScreen = ({ navigation }) => {
         <Text style={styles.link}>Chưa có tài khoản? Đăng ký</Text>
       </TouchableOpacity>
       <TouchableOpacity onPress={() => navigation.navigate("ForgotPassword")}>
-  <Text style={styles.link}>Quên mật khẩu?</Text>
-</TouchableOpacity>
-
+        <Text style={styles.link}>Quên mật khẩu?</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -97,8 +117,6 @@ const styles = StyleSheet.create({
   container: { flex: 1, padding: 20, justifyContent: "center", backgroundColor: "#fff" },
   header: { fontSize: 24, fontWeight: "bold", textAlign: "center", marginBottom: 20 },
   input: { borderWidth: 1, padding: 10, borderRadius: 5, marginBottom: 10 },
-  
-  // Ô nhập mật khẩu có nút con mắt
   passwordContainer: {
     flexDirection: "row",
     alignItems: "center",
@@ -108,15 +126,12 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   passwordInput: { flex: 1 },
-  
+  errorText: { color: "red", textAlign: "center", marginBottom: 10 },
   rememberContainer: { flexDirection: "row", alignItems: "center", marginBottom: 10 },
   rememberText: { fontSize: 16 },
   button: { backgroundColor: "#ff6347", padding: 10, borderRadius: 5, alignItems: "center" },
   buttonText: { color: "#fff", fontSize: 16, fontWeight: "bold" },
-  
   orText: { textAlign: "center", marginVertical: 15, fontSize: 16, color: "#666" },
-  
-  // Nút đăng nhập Google và Facebook
   socialContainer: { flexDirection: "row", justifyContent: "center", gap: 10 },
   socialButton: {
     flexDirection: "row",
@@ -127,7 +142,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   socialText: { color: "white", fontSize: 16, marginLeft: 10, fontWeight: "bold" },
-  
   link: { color: "blue", textAlign: "center", marginTop: 10 }
 });
 

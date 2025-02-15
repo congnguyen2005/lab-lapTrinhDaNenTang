@@ -5,7 +5,6 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
-  Alert,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -16,32 +15,44 @@ const RegisterScreen = ({ navigation }) => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const [confirmPasswordError, setConfirmPasswordError] = useState("");
 
   const isValidEmail = (email) => /\S+@\S+\.\S+/.test(email);
-  const isValidPassword = (password) =>
-    password.length >= 6 && /\d/.test(password);
+  const isValidPassword = (password) => password.length >= 6 && /\d/.test(password);
 
   const handleRegister = async () => {
+    let isValid = true;
+
     if (!isValidEmail(email)) {
-      Alert.alert("Lỗi", "Email không hợp lệ!");
-      return;
+      setEmailError("Email không hợp lệ!");
+      isValid = false;
+    } else {
+      setEmailError("");
     }
+
     if (!isValidPassword(password)) {
-      Alert.alert("Lỗi", "Mật khẩu phải có ít nhất 6 ký tự và chứa số!");
-      return;
+      setPasswordError("Mật khẩu phải có ít nhất 6 ký tự và chứa số!");
+      isValid = false;
+    } else {
+      setPasswordError("");
     }
+
     if (password !== confirmPassword) {
-      Alert.alert("Lỗi", "Mật khẩu xác nhận không khớp!");
-      return;
+      setConfirmPasswordError("Mật khẩu xác nhận không khớp!");
+      isValid = false;
+    } else {
+      setConfirmPasswordError("");
     }
+
+    if (!isValid) return;
 
     try {
       await AsyncStorage.setItem("user", JSON.stringify({ email, password }));
-      Alert.alert("Thành công", "Đăng ký thành công!", [
-        { text: "OK", onPress: () => navigation.replace("Login") },
-      ]);
+      navigation.replace("Login");
     } catch (error) {
-      Alert.alert("Lỗi", "Không thể lưu tài khoản, vui lòng thử lại!");
+      console.error("Lỗi khi lưu tài khoản", error);
     }
   };
 
@@ -56,6 +67,7 @@ const RegisterScreen = ({ navigation }) => {
         value={email}
         onChangeText={setEmail}
       />
+      {emailError ? <Text style={styles.errorText}>{emailError}</Text> : null}
 
       <View style={styles.passwordContainer}>
         <TextInput
@@ -66,13 +78,10 @@ const RegisterScreen = ({ navigation }) => {
           onChangeText={setPassword}
         />
         <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
-          <Ionicons
-            name={showPassword ? "eye" : "eye-off"}
-            size={24}
-            color="gray"
-          />
+          <Ionicons name={showPassword ? "eye" : "eye-off"} size={24} color="gray" />
         </TouchableOpacity>
       </View>
+      {passwordError ? <Text style={styles.errorText}>{passwordError}</Text> : null}
 
       <View style={styles.passwordContainer}>
         <TextInput
@@ -82,16 +91,11 @@ const RegisterScreen = ({ navigation }) => {
           value={confirmPassword}
           onChangeText={setConfirmPassword}
         />
-        <TouchableOpacity
-          onPress={() => setShowConfirmPassword(!showConfirmPassword)}
-        >
-          <Ionicons
-            name={showConfirmPassword ? "eye" : "eye-off"}
-            size={24}
-            color="gray"
-          />
+        <TouchableOpacity onPress={() => setShowConfirmPassword(!showConfirmPassword)}>
+          <Ionicons name={showConfirmPassword ? "eye" : "eye-off"} size={24} color="gray" />
         </TouchableOpacity>
       </View>
+      {confirmPasswordError ? <Text style={styles.errorText}>{confirmPasswordError}</Text> : null}
 
       <TouchableOpacity style={styles.button} onPress={handleRegister}>
         <Text style={styles.buttonText}>Đăng Ký</Text>
@@ -117,14 +121,19 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginBottom: 20,
   },
-  input: { borderWidth: 1, padding: 10, borderRadius: 5, marginBottom: 10 },
+  input: {
+    borderWidth: 1,
+    padding: 10,
+    borderRadius: 5,
+    marginBottom: 5,
+  },
   passwordContainer: {
     flexDirection: "row",
     alignItems: "center",
     borderWidth: 1,
     padding: 10,
     borderRadius: 5,
-    marginBottom: 10,
+    marginBottom: 5,
   },
   passwordInput: { flex: 1 },
   button: {
@@ -132,9 +141,11 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 5,
     alignItems: "center",
+    marginTop: 10,
   },
   buttonText: { color: "#fff", fontSize: 16, fontWeight: "bold" },
   link: { color: "blue", textAlign: "center", marginTop: 10 },
+  errorText: { color: "red", fontSize: 14, marginBottom: 10, textAlign: "left" },
 });
 
 export default RegisterScreen;
