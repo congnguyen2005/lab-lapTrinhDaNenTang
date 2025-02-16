@@ -138,7 +138,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between", // ✅ Đẩy hai bên
     alignItems: "center",
     paddingHorizontal: 20,
-    marginTop: -60,
+    marginTop: -60  ,
     paddingVertical: 10,
     borderRadius: 10,
   },  

@@ -70,11 +70,11 @@ const styles = StyleSheet.create({
     color: "white",
     textAlign: "center",
     marginVertical: 15,
-    fontFamily: 'Shafarik-Regular'
+    fontFamily: 'Shafarik-Regular', // Thay bằng tên font của bạn
   },
   button: {
     backgroundColor: "white",
-    paddingVertical: 12,
+    paddingVertical: 12,  
     paddingHorizontal: 25,
     borderRadius: 8,
     marginTop: 20,
