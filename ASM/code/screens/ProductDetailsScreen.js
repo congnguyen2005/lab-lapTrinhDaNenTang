@@ -105,7 +105,7 @@ const ProductDetailScreen = ({ route, navigation }) => {
         <Text style={styles.buttonText}>Mua ngay</Text>
       </TouchableOpacity>
     </ScrollView>
-  );
+  ); 
 };
 
 const styles = StyleSheet.create({
