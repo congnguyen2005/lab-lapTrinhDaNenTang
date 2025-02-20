@@ -7,9 +7,9 @@ import HomeScreen from "./code/HomeScreen";
 import ProductDetailsScreen from "./code/screens/ProductDetailsScreen";
 import LoginScreen from "./code/login";
 import RegisterScreen from "./code/register"; 
-import ProfileScreen from "./code/screens/ProfileScreen"; 
+import ProfileScreen from "./code/screens/profileScreen"; 
 import ForgotPasswordScreen from "./code/screens/ForgotPasswordScreen";
-import { CartProvider } from "./code/content/CartContext"; // Đảm bảo đường dẫn đúng
+import { CartProvider } from "./code/context/CartContext"; // Đảm bảo đường dẫn đúng
 import AppNavigator from "./code/screens/AppNavigator";
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
