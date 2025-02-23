@@ -14,7 +14,6 @@ const HomeScreen = ({ navigation }) => {
   const [search, setSearch] = useState("");
   const [selectedCategory, setSelectedCategory] = useState(null);
 
-  // Lấy dữ liệu sản phẩm
   useEffect(() => {
     fetch(API_URL)
       .then((response) => response.json())
@@ -27,7 +26,6 @@ const HomeScreen = ({ navigation }) => {
         setLoading(false);
       });
 
-    // Lấy danh mục sản phẩm
     fetch(CATEGORY_URL)
       .then((response) => response.json())
       .then((data) => setCategories(data))
@@ -35,21 +33,19 @@ const HomeScreen = ({ navigation }) => {
   }, []);
 
   if (loading) {
-    return <ActivityIndicator size="large" color="blue" style={styles.loading} />;
+    return <ActivityIndicator size="large" color="#007BFF" style={styles.loading} />;
   }
 
-  // Lọc sản phẩm theo từ khóa tìm kiếm và danh mục
   const filteredProducts = products.filter((item) =>
     item.title.toLowerCase().includes(search.toLowerCase()) &&
     (selectedCategory ? item.category === selectedCategory : true)
   );
 
-  // Hiển thị từng sản phẩm
   const renderItem = ({ item }) => (
     <TouchableOpacity 
       style={styles.productCard} 
       onPress={() => navigation.navigate("ProductDetails", { product: item })}
-      >
+    >
       <Image source={{ uri: item.image }} style={styles.image} />
       <Text style={styles.name}>{item.title}</Text>
       <Text style={styles.price}>${item.price}</Text>
@@ -57,54 +53,53 @@ const HomeScreen = ({ navigation }) => {
   );
 
   return (
-    <ScrollView>
-      {/* Banner quảng cáo */}
-      <Image 
-        source={require("../assets/anh.png")}  
-        style={styles.banner} 
-      />
-
-      {/* Thanh tìm kiếm */}
-      <TextInput
-        style={styles.searchBar}
-        placeholder="Tìm kiếm sản phẩm..."
-        value={search}
-        onChangeText={setSearch}
-      />
-
-      {/* Danh mục sản phẩm */}
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.categoryContainer}>
-        <TouchableOpacity 
-          style={[styles.category, selectedCategory === null && styles.selectedCategory]} 
-          onPress={() => setSelectedCategory(null)}
-        >
-          <Text style={styles.categoryText}>TẤT CẢ</Text>
-        </TouchableOpacity>
-
-        {categories.map((category, index) => (
-          <TouchableOpacity 
-            key={index} 
-            style={[styles.category, selectedCategory === category && styles.selectedCategory]} 
-            onPress={() => setSelectedCategory(category)}
-          >
-            <Text style={styles.categoryText}>{category.toUpperCase()}</Text>
-          </TouchableOpacity>
-        ))}
-      </ScrollView>
-
-      {/* Danh sách sản phẩm */}
-      <FlatList
-        data={filteredProducts}
-        renderItem={renderItem}
-        keyExtractor={(item) => item.id.toString()}
-        numColumns={2}
-        contentContainerStyle={styles.container}
-      />
-    </ScrollView>
+    <FlatList
+      ListHeaderComponent={
+        <>
+          <Image source={require("../assets/anh.png")} style={styles.banner} />
+  
+          <TextInput
+            style={styles.searchBar}
+            placeholder="Tìm kiếm sản phẩm..."
+            value={search}
+            onChangeText={setSearch}
+          />
+  
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.categoryContainer}>
+            <TouchableOpacity 
+              style={[styles.category, selectedCategory === null && styles.selectedCategory]} 
+              onPress={() => setSelectedCategory(null)}
+            >
+              <Text style={styles.categoryText}>TẤT CẢ</Text>
+            </TouchableOpacity>
+  
+            {categories.map((category, index) => (
+              <TouchableOpacity 
+                key={index} 
+                style={[styles.category, selectedCategory === category && styles.selectedCategory]} 
+                onPress={() => setSelectedCategory(category)}
+              >
+                <Text style={styles.categoryText}>{category.toUpperCase()}</Text>
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
+        </>
+      }
+      data={filteredProducts}
+      renderItem={renderItem}
+      keyExtractor={(item) => item.id.toString()}
+      numColumns={2}
+      contentContainerStyle={styles.container}
+    />
   );
+  
 };
 
 const styles = StyleSheet.create({
+  pageContainer: {
+    flex: 1,
+    backgroundColor: "#F5F5F5",
+  },
   container: {
     padding: 10,
   },
@@ -118,9 +113,10 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#ddd",
     padding: 10,
-    borderRadius: 10,
+    borderRadius: 20,
     marginBottom: 10,
     marginHorizontal: 10,
+    backgroundColor: "#fff",
   },
   categoryContainer: {
     flexDirection: "row",
@@ -128,14 +124,14 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   category: {
-    backgroundColor: "#ff6347",
+    backgroundColor: "#007BFF",
     paddingVertical: 8,
     paddingHorizontal: 15,
     borderRadius: 20,
     marginRight: 10,
   },
   selectedCategory: {
-    backgroundColor: "#ff4500",
+    backgroundColor: "#0056b3",
   },
   categoryText: {
     color: "#fff",
@@ -151,6 +147,14 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#ddd",
     alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
   },
   image: {
     width: 100,

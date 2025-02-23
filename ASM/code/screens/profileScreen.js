@@ -2,27 +2,26 @@ import React from "react";
 import { View, Text, Button, StyleSheet, Image } from "react-native";
 
 const ProfileScreen = ({ navigation }) => {
-  // Dữ liệu giả lập người dùng
   const user = {
     name: "Nguyễn Văn A",
     email: "nguyenvana@example.com",
     avatar: "https://i.pravatar.cc/150?img=3",
   };
 
+  console.log("Navigation state:", navigation.getState()); // ✅ Xem state của navigation
+
   return (
     <View style={styles.container}>
-      {/* Ảnh đại diện */}
       <Image source={{ uri: user.avatar }} style={styles.avatar} />
-
-      {/* Thông tin người dùng */}
       <Text style={styles.name}>{user.name}</Text>
       <Text style={styles.email}>{user.email}</Text>
+      <Button title="Lịch sử đơn hàng" onPress={() => navigation.push("OrderHistory")} />
 
-      {/* Nút Đăng Xuất */}
       <Button title="Đăng xuất" color="red" onPress={() => navigation.replace("Login")} />
     </View>
   );
 };
+
 
 const styles = StyleSheet.create({
   container: {

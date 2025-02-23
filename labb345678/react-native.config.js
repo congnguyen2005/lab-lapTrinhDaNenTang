@@ -4,6 +4,6 @@ module.exports = {
         android:{},
     },
         assets: ["./assets/font"],
-
+            assets: ['./node_modules/react-native-vector-icons/Fonts'],          
   };
   

@@ -5,6 +5,7 @@ import {
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { useCart } from "../context/CartContext";
 import CartBox from "../components/CartBox"; // ✅ Import hộp giỏ hàng
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const ProductDetailScreen = ({ route, navigation }) => {
   const { product } = route.params || {}; 
@@ -40,22 +41,38 @@ const ProductDetailScreen = ({ route, navigation }) => {
     setTimeout(() => setIsProcessing(false), 500);
   }, [isProcessing, isInCart, quantity, product, addToCart, updateCartQuantity, existingItem]);
 
-  const handleBuyNow = useCallback(() => {
+  const handleBuyNow = useCallback(async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-
-    if (!isInCart) {
-      addToCart({ ...product, quantity });
-    } else {
-      updateCartQuantity(product.id, existingItem.quantity + quantity);
+  
+    try {
+      // Lấy giỏ hàng hiện tại từ AsyncStorage
+      const existingCart = await AsyncStorage.getItem("cart");
+      let cartItems = existingCart ? JSON.parse(existingCart) : [];
+  
+      // Kiểm tra sản phẩm đã có trong giỏ hay chưa
+      const existingItemIndex = cartItems.findIndex((item) => item.id === product.id);
+  
+      if (existingItemIndex !== -1) {
+        cartItems[existingItemIndex].quantity += quantity;
+      } else {
+        cartItems.push({ ...product, quantity });
+      }
+  
+      // Lưu giỏ hàng mới vào AsyncStorage
+      await AsyncStorage.setItem("cart", JSON.stringify(cartItems));
+  
+      console.log("Sản phẩm đã thêm vào giỏ hàng:", cartItems);
+  
+      // Điều hướng sang màn hình Checkout
+      navigation.navigate("Checkout");
+    } catch (error) {
+      console.error("Lỗi khi xử lý mua ngay:", error);
     }
-
-    setTimeout(() => {
-      setIsProcessing(false);
-      navigation.navigate("Cart");
-    }, 500);
-  }, [isProcessing, isInCart, quantity, product, addToCart, updateCartQuantity, existingItem, navigation]);
-
+  
+    setIsProcessing(false);
+  }, [isProcessing, product, quantity, navigation]);
+  
   if (!product) {
     return <ActivityIndicator size="large" color="blue" style={styles.loading} />;
   }

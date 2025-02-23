@@ -1,31 +1,97 @@
-// App.js
+// app.js
+import React from "react";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { NavigationContainer } from "@react-navigation/native";
+import Icon from "react-native-vector-icons/MaterialIcons";
+import TopTabs from "./lab7/bai3";
+import { View, Text, TouchableOpacity } from "react-native";
 
-import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
-import DrawerNavigator from './lab6/DrawerNavigator';
-import DetailsScreen from './lab6/DetailsScreen';
+const Tab = createBottomTabNavigator();
 
-const Stack = createStackNavigator();
+function CustomTabBarButton({ children, onPress }) {
+  return (
+    <TouchableOpacity
+      style={{
+        flexDirection: "row", // Icon và chữ nằm trên cùng một hàng ngang
+        alignItems: "center",
+        justifyContent: "center",
+        paddingHorizontal: 15,
+      }}
+      onPress={onPress}
+    >
+      {children}
+    </TouchableOpacity>
+  );
+}
 
 export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Drawer">
-        {/* Drawer Navigator */}
-        <Stack.Screen 
-          name="Drawer" 
-          component={DrawerNavigator} 
-          options={{ headerShown: false }} 
+      <Tab.Navigator
+        screenOptions={{
+          tabBarShowLabel: false, // Ẩn label mặc định
+          tabBarStyle: {
+            height: 60,
+            alignItems: "center",
+            justifyContent: "center",
+          },
+        }}
+      >
+        <Tab.Screen
+          name="Home"
+          component={TopTabs}
+          options={{
+            tabBarButton: (props) => (
+              <CustomTabBarButton {...props}>
+                <Icon
+                  name="home"
+                  size={24}
+                  color={props.accessibilityState.selected ? "#6200EE" : "gray"}
+                />
+                {props.accessibilityState.selected && (
+                  <Text style={{ color: "#6200EE", marginLeft: 5 }}>Home</Text>
+                )}
+              </CustomTabBarButton>
+            ),
+          }}
         />
-        
-        {/* Stack Screen for Details */}
-        <Stack.Screen 
-          name="DetailsStack" 
-          component={DetailsScreen} 
-          options={{ title: 'Detail Information' }} 
+        <Tab.Screen
+          name="Document"
+          component={TopTabs}
+          options={{
+            tabBarButton: (props) => (
+              <CustomTabBarButton {...props}>
+                <Icon
+                  name="description"
+                  size={24}
+                  color={props.accessibilityState.selected ? "#6200EE" : "gray"}
+                />
+                {props.accessibilityState.selected && (
+                  <Text style={{ color: "#6200EE", marginLeft: 5 }}>Document</Text>
+                )}
+              </CustomTabBarButton>
+            ),
+          }}
         />
-      </Stack.Navigator>
+        <Tab.Screen
+          name="Chat"
+          component={TopTabs}
+          options={{
+            tabBarButton: (props) => (
+              <CustomTabBarButton {...props}>
+                <Icon
+                  name="chat"
+                  size={24}
+                  color={props.accessibilityState.selected ? "#6200EE" : "gray"}
+                />
+                {props.accessibilityState.selected && (
+                  <Text style={{ color: "#6200EE", marginLeft: 5 }}>Chat</Text>
+                )}
+              </CustomTabBarButton>
+            ),
+          }}
+        />
+      </Tab.Navigator>
     </NavigationContainer>
   );
 }

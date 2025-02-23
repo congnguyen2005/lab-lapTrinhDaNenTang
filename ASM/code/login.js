@@ -27,33 +27,34 @@ const LoginScreen = ({ navigation }) => {
   const handleLogin = async () => {
     try {
       const storedUser = await AsyncStorage.getItem("user");
+      console.log("Dữ liệu user từ AsyncStorage:", storedUser);
+  
       if (!storedUser) {
         setErrorMessage("Tài khoản chưa được đăng ký!");
         return;
       }
-
+  
       const { email: savedEmail, password: savedPassword } = JSON.parse(storedUser);
-
+  
+      console.log("Email nhập:", email);
+      console.log("Mật khẩu nhập:", password);
+  
       if (email !== savedEmail || password !== savedPassword) {
         setErrorMessage("Email hoặc mật khẩu không đúng. Vui lòng thử lại.");
         return;
       }
-
-      if (rememberMe) {
-        await AsyncStorage.setItem("savedEmail", email);
-        await AsyncStorage.setItem("savedPassword", password);
-      } else {
-        await AsyncStorage.removeItem("savedEmail");
-        await AsyncStorage.removeItem("savedPassword");
-      }
-
+  
       setErrorMessage("");
-      navigation.replace("Home");
+      console.log("Đăng nhập thành công! Điều hướng đến Home...");
+      
+      navigation.navigate("Main", { screen: "Home" });
+
     } catch (error) {
       console.error("Lỗi khi đăng nhập", error);
       setErrorMessage("Đã xảy ra lỗi. Vui lòng thử lại.");
     }
   };
+  
 
 
   return (
