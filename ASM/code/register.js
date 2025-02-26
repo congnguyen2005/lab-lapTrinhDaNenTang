@@ -5,6 +5,7 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
+  Image 
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -58,6 +59,9 @@ const RegisterScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
+      <View style={styles.avatarContainer}>
+        <Image source={require("../assets/avatar.png")} style={styles.avatar} />
+      </View>
       <Text style={styles.header}>Đăng Ký</Text>
       <TextInput
         style={styles.input}
@@ -113,39 +117,60 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
     justifyContent: "center",
-    backgroundColor: "#fff",
+    backgroundColor: "#f8f9fa",
   },
+  avatarContainer: { alignItems: "center", marginBottom: 20 },
+  avatar: { width: 120, height: 120, borderRadius: 60 },
   header: {
-    fontSize: 24,
+    fontSize: 26,
     fontWeight: "bold",
     textAlign: "center",
     marginBottom: 20,
+    color: "#333",
   },
   input: {
+    backgroundColor: "#fff",
+    padding: 12,
+    borderRadius: 10,
+    marginBottom: 10,
     borderWidth: 1,
-    padding: 10,
-    borderRadius: 5,
-    marginBottom: 5,
+    borderColor: "#ccc",
   },
   passwordContainer: {
     flexDirection: "row",
     alignItems: "center",
+    backgroundColor: "#fff",
+    padding: 12,
+    borderRadius: 10,
+    marginBottom: 10,
     borderWidth: 1,
-    padding: 10,
-    borderRadius: 5,
-    marginBottom: 5,
+    borderColor: "#ccc",
   },
   passwordInput: { flex: 1 },
   button: {
     backgroundColor: "#ff6347",
-    padding: 10,
-    borderRadius: 5,
+    padding: 15,
+    borderRadius: 10,
     alignItems: "center",
     marginTop: 10,
   },
-  buttonText: { color: "#fff", fontSize: 16, fontWeight: "bold" },
-  link: { color: "blue", textAlign: "center", marginTop: 10 },
-  errorText: { color: "red", fontSize: 14, marginBottom: 10, textAlign: "left" },
+  buttonText: {
+    color: "#fff",
+    fontSize: 18,
+    fontWeight: "bold",
+  },
+  link: {
+    color: "blue",
+    textAlign: "center",
+    marginTop: 10,
+    fontSize: 16,
+  },
+  errorText: {
+    color: "red",
+    fontSize: 14,
+    marginBottom: 10,
+    textAlign: "left",
+  },
 });
 
 export default RegisterScreen;

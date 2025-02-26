@@ -9,6 +9,9 @@ import CartScreen from "./CartScreen";
 import ProductDetailScreen from "./ProductDetailsScreen";
 import CheckoutScreen from "./CheckoutScreen";
 import OrderHistoryScreen from "./OrderHistoryScreen"; // ✅ Đảm bảo có import
+import FavoritesScreen from "./FavoriteScreen";
+import SupportScreen from "./SupportScreen";
+
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();   
@@ -20,6 +23,8 @@ const HomeStack = () => (
     <Stack.Screen name="ProductDetails" component={ProductDetailScreen} options={{ title: "Chi Tiết Sản Phẩm" }} />
     <Stack.Screen name="Checkout" component={CheckoutScreen} options={{ title: "Thanh Toán" }} />
     <Stack.Screen name="OrderHistory" component={OrderHistoryScreen} options={{ title: "Lịch Sử Đơn Hàng" }} />
+    <Stack.Screen name="Favorites" component={FavoritesScreen} options={{ title: "Yêu Thích" }} />
+
   </Stack.Navigator>
 );
 
@@ -42,6 +47,7 @@ const BottomTabs = () => (
         if (route.name === "HomeTab") iconName = "home";
         else if (route.name === "CartTab") iconName = "shopping-cart";
         else if (route.name === "ProfileTab") iconName = "user";
+        else if (route.name === "SupportTab") iconName = "question-circle"; // 🆕 Thêm icon cho Support
         return <FontAwesome name={iconName} size={size} color={color} />;
       },
       tabBarActiveTintColor: "#ff4500",
@@ -52,8 +58,10 @@ const BottomTabs = () => (
     <Tab.Screen name="HomeTab" component={HomeStack} options={{ title: "Trang Chủ", headerShown: false }} />
     <Tab.Screen name="CartTab" component={CartScreen} options={{ title: "Giỏ Hàng" }} />
     <Tab.Screen name="ProfileTab" component={ProfileStack} options={{ title: "Tài Khoản", headerShown: false }} />
+    <Tab.Screen name="SupportTab" component={SupportScreen} options={{ title: "Hỗ Trợ" }} />  {/* ✅ Thêm dòng này */}
   </Tab.Navigator>
 );
+
 
 // ✅ Navigation chính
 export default function AppNavigator() {

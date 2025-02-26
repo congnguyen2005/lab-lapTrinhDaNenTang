@@ -1,97 +1,29 @@
-// app.js
-import React from "react";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { NavigationContainer } from "@react-navigation/native";
-import Icon from "react-native-vector-icons/MaterialIcons";
-import TopTabs from "./lab7/bai3";
-import { View, Text, TouchableOpacity } from "react-native";
+import React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import UserListScreen from './lab8bai3/ListUser';
+import EditUserScreen from './lab8bai3/UpdateUser';
+import UserDetailScreen from './lab8bai3/UserDetailScreen';
+import CreateUserScreen from './lab8bai3/CreateUser';
+const Stack = createNativeStackNavigator();
 
-const Tab = createBottomTabNavigator();
-
-function CustomTabBarButton({ children, onPress }) {
-  return (
-    <TouchableOpacity
-      style={{
-        flexDirection: "row", // Icon và chữ nằm trên cùng một hàng ngang
-        alignItems: "center",
-        justifyContent: "center",
-        paddingHorizontal: 15,
-      }}
-      onPress={onPress}
-    >
-      {children}
-    </TouchableOpacity>
-  );
-}
-
-export default function App() {
+const App = () => {
   return (
     <NavigationContainer>
-      <Tab.Navigator
-        screenOptions={{
-          tabBarShowLabel: false, // Ẩn label mặc định
-          tabBarStyle: {
-            height: 60,
-            alignItems: "center",
-            justifyContent: "center",
-          },
-        }}
-      >
-        <Tab.Screen
-          name="Home"
-          component={TopTabs}
-          options={{
-            tabBarButton: (props) => (
-              <CustomTabBarButton {...props}>
-                <Icon
-                  name="home"
-                  size={24}
-                  color={props.accessibilityState.selected ? "#6200EE" : "gray"}
-                />
-                {props.accessibilityState.selected && (
-                  <Text style={{ color: "#6200EE", marginLeft: 5 }}>Home</Text>
-                )}
-              </CustomTabBarButton>
-            ),
-          }}
+      <Stack.Navigator initialRouteName="UserList">
+        <Stack.Screen name="UserList" component={UserListScreen} options={{ title: 'Danh sách người dùng' }} />
+        <Stack.Screen name="EditUser" component={EditUserScreen} options={{ title: 'Chỉnh sửa người dùng' }} />
+        <Stack.Screen name="CreateUser" component={CreateUserScreen} options={{ title: 'Tạo người dùng' }} />
+        <Stack.Screen
+          name="UserDetail"
+          component={UserDetailScreen}
+          options={{ title: 'Chi tiết người dùng' }}
         />
-        <Tab.Screen
-          name="Document"
-          component={TopTabs}
-          options={{
-            tabBarButton: (props) => (
-              <CustomTabBarButton {...props}>
-                <Icon
-                  name="description"
-                  size={24}
-                  color={props.accessibilityState.selected ? "#6200EE" : "gray"}
-                />
-                {props.accessibilityState.selected && (
-                  <Text style={{ color: "#6200EE", marginLeft: 5 }}>Document</Text>
-                )}
-              </CustomTabBarButton>
-            ),
-          }}
-        />
-        <Tab.Screen
-          name="Chat"
-          component={TopTabs}
-          options={{
-            tabBarButton: (props) => (
-              <CustomTabBarButton {...props}>
-                <Icon
-                  name="chat"
-                  size={24}
-                  color={props.accessibilityState.selected ? "#6200EE" : "gray"}
-                />
-                {props.accessibilityState.selected && (
-                  <Text style={{ color: "#6200EE", marginLeft: 5 }}>Chat</Text>
-                )}
-              </CustomTabBarButton>
-            ),
-          }}
-        />
-      </Tab.Navigator>
+      </Stack.Navigator>
     </NavigationContainer>
   );
-}
+};
+
+export default App;
+
+

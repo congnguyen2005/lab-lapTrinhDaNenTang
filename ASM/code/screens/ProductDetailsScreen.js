@@ -12,11 +12,13 @@ const ProductDetailScreen = ({ route, navigation }) => {
   const { cart, addToCart, updateCartQuantity } = useCart();  
   const [quantity, setQuantity] = useState(1);
   const [isProcessing, setIsProcessing] = useState(false);
-
+  const [isFavorite, setIsFavorite] = useState(false);
   useEffect(() => {
     if (!product) {
       Alert.alert("Lỗi", "Không tìm thấy sản phẩm!");
       navigation.goBack();
+    } else {
+      checkFavoriteStatus();
     }
   }, [product, navigation]);
 
@@ -25,6 +27,38 @@ const ProductDetailScreen = ({ route, navigation }) => {
 
   const increaseQuantity = () => setQuantity(quantity + 1);
   const decreaseQuantity = () => setQuantity(quantity > 1 ? quantity - 1 : 1);
+
+// Kiểm tra xem sản phẩm có trong danh sách yêu thích không
+const checkFavoriteStatus = async () => {
+  try {
+    const favoriteData = await AsyncStorage.getItem("favoriteProducts");
+    const favoriteList = favoriteData ? JSON.parse(favoriteData) : [];
+    setIsFavorite(favoriteList.some((item) => item.id === product.id));
+  } catch (error) {
+    console.error("Lỗi kiểm tra danh sách yêu thích:", error);
+  }
+};
+
+// Thêm/bỏ sản phẩm khỏi danh sách yêu thích
+const toggleFavorite = async () => {
+  try {
+    let favoriteProducts = await AsyncStorage.getItem("favoriteProducts");
+    favoriteProducts = favoriteProducts ? JSON.parse(favoriteProducts) : [];
+    const exists = favoriteProducts.some((item) => item.id === product.id);
+
+    if (exists) {
+      favoriteProducts = favoriteProducts.filter((item) => item.id !== product.id);
+    } else {
+      favoriteProducts.push(product);
+    }
+
+    await AsyncStorage.setItem("favoriteProducts", JSON.stringify(favoriteProducts));
+    setIsFavorite(!isFavorite);
+  } catch (error) {
+    console.error("Lỗi khi cập nhật danh sách yêu thích:", error);
+  }
+};
+
 
   const handleAddToCart = useCallback(() => {
     if (isProcessing) return;
@@ -97,7 +131,10 @@ const ProductDetailScreen = ({ route, navigation }) => {
             <Icon name="add" size={20} color="white" />
           </TouchableOpacity>
         </View>
-
+   {/* Icon yêu thích */}
+        <TouchableOpacity onPress={toggleFavorite} style={styles.favoriteIcon}>
+          <Icon name={isFavorite ? "favorite" : "favorite-border"} size={28} color="red" />
+        </TouchableOpacity>
         <TouchableOpacity
           style={[styles.button, isProcessing && styles.disabledButton]}
           onPress={handleAddToCart}

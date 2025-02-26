@@ -22,23 +22,31 @@ const OrderHistoryScreen = ({ navigation }) => {
     }
   };
 
-  const deleteAllOrders = async () => {
-    Alert.alert(
-      "Xác nhận",
-      "Bạn có chắc chắn muốn xóa toàn bộ lịch sử đơn hàng?",
-      [
-        { text: "Hủy", style: "cancel" },
-        {
-          text: "Xóa",
-          style: "destructive",
-          onPress: async () => {
-            await AsyncStorage.removeItem("orderHistory");
-            setOrders([]);
-          },
-        },
-      ]
-    );
+  const updateOrderStatus = async (orderId) => {
+    try {
+      const updatedOrders = orders.map(order => {
+        if (order.id === orderId) {
+          let newStatus = order.status;
+  
+          if (order.status === "Đang xử lý") newStatus = "Đang giao";
+          else if (order.status === "Đang giao") newStatus = "Đã giao";
+          else if (order.status === "Đã giao") return order; // Nếu đã giao thì giữ nguyên
+  
+          return { ...order, status: newStatus };
+        }
+        return order;
+      });
+  
+      setOrders(updatedOrders);
+      await AsyncStorage.setItem("orderHistory", JSON.stringify(updatedOrders));
+  
+      // Kiểm tra trạng thái sau khi cập nhật
+      console.log("Trạng thái mới:", updatedOrders);
+    } catch (error) {
+      console.error("Lỗi khi cập nhật trạng thái:", error);
+    }
   };
+  
 
   const deleteOrder = async (orderId) => {
     Alert.alert(
@@ -62,8 +70,8 @@ const OrderHistoryScreen = ({ navigation }) => {
   const getStatusColor = (status) => {
     switch (status) {
       case "Đang xử lý": return "orange";
+      case "Đang giao": return "blue";
       case "Đã giao": return "green";
-      case "Đã hủy": return "red";
       default: return "gray";
     }
   };
@@ -72,13 +80,6 @@ const OrderHistoryScreen = ({ navigation }) => {
     <View style={styles.container}>
       <Text style={styles.title}>🛒 Lịch sử mua hàng</Text>
 
-      {/* Nút xóa toàn bộ lịch sử */}
-      {orders.length > 0 && (
-        <TouchableOpacity style={styles.deleteAllButton} onPress={deleteAllOrders}>
-          <Text style={styles.deleteAllText}>🗑️ Xóa toàn bộ lịch sử</Text>
-        </TouchableOpacity>
-      )}
-
       <FlatList
         data={orders}
         keyExtractor={(item) => item.id.toString()}
@@ -86,11 +87,10 @@ const OrderHistoryScreen = ({ navigation }) => {
         onRefresh={fetchOrders}
         ListEmptyComponent={<Text style={styles.emptyText}>Bạn chưa có đơn hàng nào.</Text>}
         renderItem={({ item }) => {
-          const firstProduct = item.items.length > 0 ? item.items[0].name : "Chưa có sản phẩm";
           return (
             <View style={styles.orderItem}>
               <View style={styles.orderHeader}>
-                <Text style={styles.orderTitle}>Đơn hàng #{item.id} - {firstProduct}</Text>
+                <Text style={styles.orderTitle}>Đơn hàng #{item.id}</Text>
                 <TouchableOpacity onPress={() => deleteOrder(item.id)}>
                   <Text style={styles.deleteText}>🗑️</Text>
                 </TouchableOpacity>
@@ -102,23 +102,15 @@ const OrderHistoryScreen = ({ navigation }) => {
                 🏷️ Trạng thái: {item.status}
               </Text>
 
-              <FlatList
-                data={item.items}
-                keyExtractor={(product, index) => index.toString()}
-                renderItem={({ item }) => (
-                  <View style={styles.productItem}>
-                    <Text>🔹 {item.name} x {item.quantity}</Text>
-                    <Text>{(item.price * item.quantity).toLocaleString()} VND</Text>
-                  </View>
-                )}
-              />
-
-              <TouchableOpacity
-                style={styles.button}
-                onPress={() => navigation.navigate("Home")}
-              >
-                <Text style={styles.buttonText}>🛍️ Mua thêm</Text>
-              </TouchableOpacity>
+              {/* Nút cập nhật trạng thái */}
+              {item.status !== "Đã giao" && (
+                <TouchableOpacity
+                  style={styles.updateButton}
+                  onPress={() => updateOrderStatus(item.id)}
+                >
+                  <Text style={styles.buttonText}>🔄 Cập nhật trạng thái</Text>
+                </TouchableOpacity>
+              )}
             </View>
           );
         }}
@@ -130,14 +122,6 @@ const OrderHistoryScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: { flex: 1, padding: 20, backgroundColor: "#f9f9f9" },
   title: { fontSize: 22, fontWeight: "bold", marginBottom: 10, textAlign: "center" },
-  deleteAllButton: {
-    backgroundColor: "red",
-    padding: 10,
-    borderRadius: 8,
-    alignItems: "center",
-    marginBottom: 10,
-  },
-  deleteAllText: { color: "white", fontWeight: "bold" },
   emptyText: { fontSize: 16, textAlign: "center", marginTop: 20, color: "gray" },
   orderItem: {
     padding: 15,
@@ -158,14 +142,7 @@ const styles = StyleSheet.create({
   orderTitle: { fontWeight: "bold", fontSize: 18 },
   deleteText: { color: "red", fontSize: 18 },
   status: { fontWeight: "bold", marginTop: 5 },
-  productItem: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    paddingVertical: 5,
-    borderBottomWidth: 1,
-    borderBottomColor: "#ddd",
-  },
-  button: {
+  updateButton: {
     backgroundColor: "#007BFF",
     padding: 10,
     borderRadius: 8,
