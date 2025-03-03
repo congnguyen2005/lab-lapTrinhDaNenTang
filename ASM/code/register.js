@@ -77,7 +77,7 @@ const RegisterScreen = ({ navigation }) => {
         <TextInput
           style={styles.passwordInput}
           placeholder="Mật khẩu"
-          secureTextEntry={!showPassword}
+          secureTextEntry={!showPassword} 
           value={password}
           onChangeText={setPassword}
         />

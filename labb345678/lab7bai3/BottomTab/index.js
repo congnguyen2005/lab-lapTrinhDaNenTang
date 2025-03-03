@@ -64,8 +64,8 @@ const ProfileScreen = () => {
             </View>
 
             {/* Thông tin người dùng */}
-            <Text style={styles.name}>Đặng Công Nguyên</Text>
-            <Text style={styles.email}>nguyendcpd10143@gmail.com</Text>
+            <Text style={styles.name}>Nguyễn Quang Nam</Text>
+            <Text style={styles.email}>quangnam2604@gmail.com</Text>
 
             {/* Danh sách tuỳ chọn */}
             <View style={styles.menu}>

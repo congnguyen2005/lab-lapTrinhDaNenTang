@@ -1,29 +1,14 @@
-import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import UserListScreen from './lab8bai3/ListUser';
-import EditUserScreen from './lab8bai3/UpdateUser';
-import UserDetailScreen from './lab8bai3/UserDetailScreen';
-import CreateUserScreen from './lab8bai3/CreateUser';
-const Stack = createNativeStackNavigator();
+import React from "react";
+import { NavigationContainer } from "@react-navigation/native";
 
-const App = () => {
+import BottomTabs from "./lab7bai3/BottomTab/index"; // Đảm bảo đường dẫn đúng
+
+export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="UserList">
-        <Stack.Screen name="UserList" component={UserListScreen} options={{ title: 'Danh sách người dùng' }} />
-        <Stack.Screen name="EditUser" component={EditUserScreen} options={{ title: 'Chỉnh sửa người dùng' }} />
-        <Stack.Screen name="CreateUser" component={CreateUserScreen} options={{ title: 'Tạo người dùng' }} />
-        <Stack.Screen
-          name="UserDetail"
-          component={UserDetailScreen}
-          options={{ title: 'Chi tiết người dùng' }}
-        />
-      </Stack.Navigator>
+      <BottomTabs />
     </NavigationContainer>
   );
-};
-
-export default App;
+}
 
 
