@@ -10,7 +10,7 @@ export const sendMessageToAI = async (message) => {
         contents: [{ parts: [{ text: message }] }],
       }
     );
-
+    
     return response.data.candidates[0]?.content?.parts[0]?.text || "Không có phản hồi từ AI.";
   } catch (error) {
     console.error("Lỗi gọi API:", error);

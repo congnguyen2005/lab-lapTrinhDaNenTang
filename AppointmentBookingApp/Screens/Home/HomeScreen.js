@@ -18,7 +18,7 @@ const HomeScreen = () => {
   const flatListRef = useRef(null);
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  // Auto-scroll banner
+    // Auto-scroll banner
   React.useEffect(() => {
     const interval = setInterval(() => {
       const nextIndex = (currentIndex + 1) % banners.length;

@@ -1,0 +1,102 @@
+import { StyleSheet } from 'react-native';
+
+export default StyleSheet.create({
+    background: {
+        flex: 1,
+        resizeMode: 'cover',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    container: {
+        width: '90%',
+        padding: 20,
+        backgroundColor: 'rgba(255, 255, 255, 0.9)',
+        borderRadius: 15,
+        alignItems: 'center',
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.2,
+        shadowRadius: 5,
+        elevation: 5,
+    },
+    title: {
+        fontSize: 26,
+        fontWeight: 'bold',
+        color: '#333',
+        marginBottom: 10,
+    },
+    subtitle: {
+        fontSize: 16,
+        color: '#666',
+        marginBottom: 20,
+    },
+    input: {
+        width: '100%',
+        borderWidth: 1,
+        borderColor: '#ccc',
+        borderRadius: 10,
+        padding: 12,
+        marginBottom: 10,
+        backgroundColor: '#fff',
+    },
+    label: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        color: '#444',
+        alignSelf: 'flex-start',
+        marginBottom: 5,
+    },
+    datePickerButton: {
+        width: '100%',
+        padding: 12,
+        alignItems: 'center',
+        backgroundColor: '#fff',
+        borderRadius: 10,
+        borderWidth: 1,
+        borderColor: '#ccc',
+        marginBottom: 10,
+    },
+    genderContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        width: '100%',
+        marginVertical: 10,
+    },
+    genderButton: {
+        padding: 10,
+        borderRadius: 10,
+        borderWidth: 1,
+        borderColor: '#007bff',
+        backgroundColor: 'rgba(0, 123, 255, 0.1)',
+    },
+    genderText: {
+        color: '#007bff',
+        fontSize: 14,
+        fontWeight: 'bold',
+    },
+    selectedGender: {
+        backgroundColor: '#007bff',
+        color: '#fff',
+    },
+    button: {
+        backgroundColor: '#007bff',
+        padding: 15,
+        borderRadius: 10,
+        width: '100%',
+        alignItems: 'center',
+        marginTop: 20,
+    },
+    buttonText: {
+        color: '#fff',
+        fontWeight: 'bold',
+        fontSize: 16,
+    },
+    linkText: {
+        marginTop: 15,
+        color: '#007bff',
+        fontSize: 14,
+    },
+    linkHighlight: {
+        fontWeight: 'bold',
+    },
+});

@@ -59,7 +59,6 @@ const LoginScreen = ({ setIsLoggedIn }) => {
       }
       setIsLoggedIn(true);
       navigation.navigate("HomeTab");  // Đúng với tên đã đăng ký
-
     } else {
       Alert.alert("Lỗi", "Email hoặc mật khẩu không đúng.");
     }
